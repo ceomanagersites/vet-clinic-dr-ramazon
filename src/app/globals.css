@@ -1,0 +1,938 @@
+@import "tailwindcss";
+
+@theme {
+  --color-milk: #fbf9f4;
+  --color-oat: #efe8da;
+  --color-sage-100: #e4eadf;
+  --color-sage-300: #c6d2c0;
+  --color-sage: #a8baa2;
+  --color-moss: #4f6957;
+  --color-pine: #17352c;
+  --color-pine-700: #24493d;
+  --color-ink: #13261f;
+  --color-amber: #eaa53f;
+
+  --font-sans: var(--font-geologica), ui-sans-serif, system-ui, sans-serif;
+
+  /* Появление: резкий старт, мягкая посадка */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Движение по экрану и шторки фото */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  /* Крупные панели, как шторка на iOS */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Лёгкий перелёт, когда подушечка лапы прижимается */
+  --ease-press: cubic-bezier(0.34, 1.3, 0.64, 1);
+
+  --breakpoint-xs: 26rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    scroll-padding-bottom: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--color-milk);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 350;
+    line-height: 1.6;
+    overflow-x: clip;
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a,
+  button,
+  label {
+    touch-action: manipulation;
+  }
+
+  .btn,
+  button,
+  .chip,
+  .lang-switch a {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-sage-300);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: max(1.25rem, env(safe-area-inset-left, 0px)) max(1.25rem, env(safe-area-inset-right, 0px));
+  }
+
+  @media (min-width: 48rem) {
+    .wrap {
+      padding-inline: max(2.5rem, env(safe-area-inset-left, 0px)) max(2.5rem, env(safe-area-inset-right, 0px));
+    }
+  }
+
+  .display {
+    font-size: clamp(2.15rem, 1.45rem + 3.1vw, 4.15rem);
+    font-weight: 300;
+    line-height: 1.06;
+    letter-spacing: -0.032em;
+  }
+
+  .heading {
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.7rem);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.028em;
+  }
+
+  .lead {
+    font-size: clamp(1.06rem, 1rem + 0.35vw, 1.3rem);
+    line-height: 1.55;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3.25rem;
+    padding: 0.75rem 1.6rem;
+    border-radius: 999px;
+    font-weight: 450;
+    white-space: nowrap;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease,
+      transform 160ms var(--ease-out);
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn svg {
+    flex: none;
+  }
+
+  .btn-primary {
+    background: var(--color-pine);
+    color: var(--color-milk);
+  }
+
+  .btn-amber {
+    background: var(--color-amber);
+    color: var(--color-ink);
+  }
+
+  .btn-outline {
+    border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  }
+
+  .link-underline {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 240ms var(--ease-out);
+  }
+
+  /* Переключатель языка */
+  .lang-switch {
+    display: inline-flex;
+    padding: 0.2rem;
+    border-radius: 999px;
+    background: var(--color-sage-100);
+    font-size: 0.82rem;
+    letter-spacing: 0.01em;
+  }
+
+  .lang-switch a {
+    display: grid;
+    place-items: center;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    border-radius: 999px;
+    color: var(--color-moss);
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .lang-switch a:active {
+    background: var(--color-sage-300);
+  }
+
+  .lang-switch a[aria-current="true"] {
+    background: var(--color-pine);
+    color: var(--color-milk);
+  }
+
+  /* Мобильное меню: открывается спокойнее, чем закрывается */
+  .mobile-menu {
+    opacity: 0;
+    translate: 0 -8px;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 160ms ease,
+      translate 160ms ease,
+      visibility 0s linear 160ms;
+  }
+
+  .mobile-menu[data-open="true"] {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity 240ms var(--ease-out),
+      translate 240ms var(--ease-out),
+      visibility 0s;
+  }
+}
+
+/* Отпечаток лапы на главном экране: подушечки вырезаны SVG-масками */
+.paw {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.04;
+}
+
+.pad {
+  position: absolute;
+  overflow: hidden;
+  background: var(--color-sage-100);
+  rotate: var(--tilt, 0deg);
+  clip-path: url(#pad-toe);
+}
+
+.pad-main {
+  left: 13%;
+  top: 43%;
+  width: 74%;
+  height: 57%;
+  clip-path: url(#pad-main);
+}
+
+.pad-1 {
+  --tilt: -26deg;
+  left: 0;
+  top: 29%;
+  width: 21%;
+  height: 28%;
+}
+
+.pad-2 {
+  --tilt: -9deg;
+  left: 21%;
+  top: 2.5%;
+  width: 25%;
+  height: 34%;
+}
+
+.pad-3 {
+  --tilt: 9deg;
+  left: 54%;
+  top: 2.5%;
+  width: 25%;
+  height: 34%;
+}
+
+.pad-4 {
+  --tilt: 26deg;
+  left: 79%;
+  top: 29%;
+  width: 21%;
+  height: 28%;
+}
+
+.pad img {
+  rotate: calc(var(--tilt, 0deg) * -1);
+  scale: var(--zoom, 1.32);
+}
+
+.pad-main img {
+  --zoom: 1;
+}
+
+/* Часы работы: сцена по мотивам промо-ролика клиники */
+.hours {
+  position: relative;
+  overflow: clip;
+  padding-top: 5.5rem;
+  background: var(--color-milk);
+}
+
+.hours-paw {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  width: min(96vw, 48rem);
+  color: var(--color-sage-100);
+  opacity: 0.8;
+  translate: -50% 0;
+}
+
+.hours-top {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.hours-head {
+  position: relative;
+  z-index: 3;
+}
+
+.hours-pill {
+  display: inline-flex;
+  padding: 0.5rem 1.15rem;
+  border-radius: 0.9rem;
+  background: var(--color-sage-300);
+  color: var(--color-pine);
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.hours-time {
+  margin-top: 0.75rem;
+  color: var(--color-pine);
+  font-size: clamp(3.1rem, 1.6rem + 7.2vw, 7.6rem);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.hours-stage {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 27rem);
+  aspect-ratio: 1;
+  /* Голова выступает над плиткой на треть её ширины и не должна задевать часы */
+  margin-top: min(35vw, 10rem);
+  margin-bottom: -6.5rem;
+}
+
+.hours-tile {
+  position: absolute;
+  inset: 0;
+  border-radius: 2.25rem;
+  background: linear-gradient(170deg, var(--color-sage-300), var(--color-sage));
+}
+
+.hours-figure {
+  position: absolute;
+  inset: -45% 0 0;
+  overflow: hidden;
+  border-radius: 0 0 2.25rem 2.25rem;
+}
+
+.hours-figure img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* Портрет из команды: голова над плиткой, как у доктора в блоке часов.
+   Мягкая тень запечена в картинку и лежит только на плитке, иначе её обрезал бы край карточки */
+.team-figure {
+  position: relative;
+  /* Совпадает с размером картинок: рамку по ширине и высоте задают самые тесные снимки */
+  aspect-ratio: 790 / 950;
+  overflow: hidden;
+  border-radius: 0 0 1.5rem 1.5rem;
+}
+
+.team-tile {
+  position: absolute;
+  /* Верх плитки под подбородком: портреты выровнены так, что голова целиком над ней */
+  inset: 41.05% 0 0;
+  border-radius: 1.5rem;
+  background: linear-gradient(170deg, var(--color-sage-300), var(--color-sage));
+}
+
+.team-figure img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+.hours-bottom {
+  position: relative;
+  z-index: 1;
+  padding-block: 9rem 1.5rem;
+  background: var(--color-pine);
+  color: var(--color-milk);
+}
+
+.hours-wave {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% - 1px);
+  width: 100%;
+  height: clamp(2.5rem, 7vw, 6rem);
+  color: var(--color-pine);
+}
+
+.hours-contacts {
+  display: grid;
+  gap: 1.5rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.hours-address {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 3rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 0.9rem;
+  background: var(--color-milk);
+  color: var(--color-pine);
+  line-height: 1.3;
+  text-align: left;
+  transition:
+    background-color 200ms ease,
+    transform 160ms var(--ease-out);
+}
+
+.hours-address:active {
+  background: var(--color-oat);
+  transform: scale(0.98);
+}
+
+@media (min-width: 64rem) {
+  .hours {
+    padding-top: 7rem;
+  }
+
+  .hours-top {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    justify-items: start;
+    align-items: center;
+    text-align: left;
+  }
+
+  .hours-head {
+    grid-column: 1 / span 7;
+    padding-bottom: 8rem;
+  }
+
+  .hours-stage {
+    grid-column: 8 / -1;
+    justify-self: end;
+    width: 100%;
+    max-width: 30rem;
+    margin-top: 8rem;
+    margin-bottom: -7.5rem;
+  }
+
+  .hours-bottom {
+    padding-block: 2.5rem 2rem;
+  }
+
+  .hours-contacts {
+    justify-items: start;
+    text-align: left;
+    max-width: 90rem;
+  }
+
+  .hours-contacts > * {
+    max-width: 58%;
+  }
+
+  .hours-paw {
+    left: -4rem;
+    top: -2rem;
+    translate: none;
+  }
+}
+
+/* Карточки услуг */
+.service-card {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
+}
+
+.service-card .service-icon {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+/* Галерея */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 42vw;
+  grid-auto-flow: dense;
+  gap: 0.6rem;
+}
+
+@media (min-width: 48rem) {
+  .gallery-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 21vw;
+    gap: 0.9rem;
+  }
+}
+
+@media (min-width: 90rem) {
+  .gallery-grid {
+    grid-auto-rows: 19rem;
+  }
+}
+
+.gallery-tile {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 1.1rem;
+  background: var(--color-sage-100);
+  transition: transform 160ms var(--ease-out);
+}
+
+.gallery-tile:active {
+  transform: scale(0.985);
+}
+
+.gallery-tile img {
+  transition: scale 500ms var(--ease-out);
+}
+
+.gallery-tile .tile-caption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 2.5rem 1rem 0.85rem;
+  background: linear-gradient(to top, rgb(19 38 31 / 0.72), transparent);
+  color: var(--color-milk);
+  font-size: 0.9rem;
+  line-height: 1.3;
+  text-align: left;
+  opacity: 0;
+  translate: 0 6px;
+  transition:
+    opacity 200ms ease,
+    translate 200ms var(--ease-out);
+}
+
+.gallery-tile:focus-visible .tile-caption {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Лайтбокс: появление плавное, закрытие быстрее. Листание мгновенное */
+dialog.lightbox {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-milk);
+  overscroll-behavior: contain;
+  opacity: 0;
+  transition:
+    opacity 140ms ease,
+    overlay 140ms allow-discrete,
+    display 140ms allow-discrete;
+}
+
+dialog.lightbox[open] {
+  opacity: 1;
+  transition-duration: 220ms;
+}
+
+dialog.lightbox::backdrop {
+  background: rgb(14 30 24 / 0.94);
+  opacity: 0;
+  transition:
+    opacity 140ms ease,
+    overlay 140ms allow-discrete,
+    display 140ms allow-discrete;
+}
+
+dialog.lightbox[open]::backdrop {
+  opacity: 1;
+  transition-duration: 220ms;
+}
+
+@starting-style {
+  dialog.lightbox[open],
+  dialog.lightbox[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* Слайдер отзывов */
+.slider {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: 1.25rem;
+  padding-inline: 1.25rem;
+}
+
+.slider::-webkit-scrollbar,
+.scroll-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.slider > * {
+  flex: 0 0 min(86vw, 27rem);
+  scroll-snap-align: start;
+}
+
+@media (min-width: 48rem) {
+  .slider {
+    gap: 1.25rem;
+    scroll-padding-inline: 2.5rem;
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 90rem) {
+  .slider {
+    scroll-padding-inline: calc((100vw - 90rem) / 2 + 2.5rem);
+    padding-inline: calc((100vw - 90rem) / 2 + 2.5rem);
+  }
+}
+
+.scroll-strip {
+  scrollbar-width: none;
+}
+
+/* Поля формы на тёмном фоне */
+.field {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgb(251 249 244 / 0.24);
+  border-radius: 0.8rem;
+  background: rgb(251 249 244 / 0.06);
+  color: var(--color-milk);
+  font-size: 1rem;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.field::placeholder {
+  color: rgb(251 249 244 / 0.55);
+}
+
+.field:focus {
+  border-color: var(--color-amber);
+  background: rgb(251 249 244 / 0.1);
+  outline: none;
+}
+
+.field[aria-invalid="true"] {
+  border-color: #f0b7a0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding-inline: 1.25rem;
+  border: 1px solid rgb(251 249 244 / 0.24);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms var(--ease-out);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+input:checked + .chip {
+  background: var(--color-milk);
+  border-color: var(--color-milk);
+  color: var(--color-pine);
+}
+
+input:focus-visible + .chip {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
+}
+
+/* Наведение только там, где оно есть: на телефоне :hover залипает после нажатия */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    background: var(--color-pine-700);
+  }
+
+  .btn-amber:hover {
+    background: #f2b65c;
+  }
+
+  .btn-outline:hover {
+    border-color: currentColor;
+  }
+
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  .lang-switch a:not([aria-current="true"]):hover {
+    color: var(--color-pine);
+  }
+
+  .hours-address:hover {
+    background: var(--color-oat);
+  }
+
+  .service-card:hover {
+    background: var(--color-sage-100);
+    border-color: var(--color-sage);
+  }
+
+  .service-card:hover .service-icon {
+    background: var(--color-pine);
+    color: var(--color-milk);
+  }
+
+  .gallery-tile:hover img {
+    scale: 1.03;
+  }
+
+  .gallery-tile:hover .tile-caption {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .field:hover {
+    border-color: rgb(251 249 244 / 0.42);
+  }
+
+  .chip:hover {
+    border-color: rgb(251 249 244 / 0.5);
+  }
+}
+
+/* Скрытые состояния есть только там, где движение разрешено */
+@media (prefers-reduced-motion: no-preference) {
+  /* Первый экран: один согласованный момент при загрузке */
+  .js .hero-rise {
+    animation: hero-rise 640ms var(--ease-out) both;
+    animation-delay: var(--enter, 0ms);
+  }
+
+  .js .pad {
+    animation: pad-press 620ms var(--ease-press) both;
+    animation-delay: var(--press, 0ms);
+  }
+
+  /* Текст появляется коротко и почти без смещения */
+  .js [data-reveal]:not([data-reveal="image"]) {
+    opacity: 0;
+    translate: 0 12px;
+    transition:
+      opacity 520ms var(--ease-out),
+      translate 520ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal]:not([data-reveal="image"]).is-visible {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Фото открывается шторкой на цветной подложке, а снимок слегка отъезжает.
+     Шторка на картинке, а не на контейнере: скрытый контейнер не заметит IntersectionObserver */
+  .js [data-reveal="image"]:not(.is-visible) img {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .js [data-reveal="image"].is-visible img {
+    animation: image-reveal 900ms var(--ease-in-out) backwards;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  /* Сцена с часами целиком укладывается примерно в секунду */
+  [data-scene] .scene-fade,
+  [data-scene] .scene-slide {
+    transition:
+      opacity 460ms var(--ease-out),
+      translate 460ms var(--ease-out);
+    transition-delay: var(--delay, 0ms);
+  }
+
+  [data-scene] .scene-rise {
+    transition:
+      opacity 560ms var(--ease-out),
+      translate 620ms var(--ease-out),
+      scale 620ms var(--ease-out);
+    transition-delay: var(--delay, 0ms);
+  }
+
+  [data-scene] .scene-peek {
+    transition: translate 760ms var(--ease-drawer);
+    transition-delay: var(--delay, 0ms);
+  }
+
+  [data-scene] .scene-panel {
+    transition: translate 700ms var(--ease-drawer);
+  }
+
+  .js [data-scene]:not(.is-visible) .scene-fade {
+    opacity: 0;
+    translate: 0 10px;
+  }
+
+  .js [data-scene]:not(.is-visible) .scene-slide {
+    opacity: 0;
+    translate: -10px 0;
+  }
+
+  .js [data-scene]:not(.is-visible) .scene-rise {
+    opacity: 0;
+    translate: 0 28px;
+    scale: 0.97;
+  }
+
+  .js [data-scene]:not(.is-visible) .scene-peek {
+    translate: 0 100%;
+  }
+
+  .js [data-scene]:not(.is-visible) .scene-panel {
+    translate: 0 56px;
+  }
+
+  /* Пункты меню идут короткой волной, только при открытии */
+  .mobile-menu[data-open="true"] .menu-item {
+    animation: hero-rise 320ms var(--ease-out) both;
+    animation-delay: var(--enter, 0ms);
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+@keyframes pad-press {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+@keyframes image-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    scale: 1.06;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    scale: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Меньше движения не значит ноль: всё проявляется, но ничего не смещается */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js .hero-rise {
+    animation: fade-in 480ms ease both;
+    animation-delay: var(--enter, 0ms);
+  }
+
+  .js .pad {
+    animation: fade-in 480ms ease both;
+    animation-delay: var(--press, 0ms);
+  }
+
+  .js [data-reveal] {
+    opacity: 0;
+    transition: opacity 420ms ease;
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+  }
+
+  [data-scene] .scene-fade,
+  [data-scene] .scene-slide,
+  [data-scene] .scene-rise,
+  [data-scene] .scene-peek {
+    transition: opacity 420ms ease;
+    transition-delay: var(--delay, 0ms);
+  }
+
+  .js [data-scene]:not(.is-visible) .scene-fade,
+  .js [data-scene]:not(.is-visible) .scene-slide,
+  .js [data-scene]:not(.is-visible) .scene-rise,
+  .js [data-scene]:not(.is-visible) .scene-peek {
+    opacity: 0;
+  }
+
+  .btn:active,
+  .chip:active,
+  .gallery-tile:active,
+  .hours-address:active {
+    transform: none;
+  }
+
+  .gallery-tile img {
+    transition: none;
+  }
+}

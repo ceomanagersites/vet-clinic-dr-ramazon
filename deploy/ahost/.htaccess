@@ -1,0 +1,37 @@
+# Настройки для обычного хостинга на Apache или LiteSpeed (Ahost). Лежит в корне сайта рядом с index.html.
+
+DirectoryIndex index.html
+
+# Своя страница 404 на языке адреса: 404.php выбирает русскую для /ru/… и узбекскую для остальных.
+ErrorDocument 404 /404.php
+
+AddType image/webp .webp
+AddType font/woff2 .woff2
+AddType image/svg+xml .svg
+AddDefaultCharset utf-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Переход на https и адрес без www. Включите, когда в панели хостинга заработает SSL-сертификат:
+  # уберите знак # в начале пяти строк ниже. Если включить раньше, сайт перестанет открываться.
+  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  # RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+  # RewriteCond %{HTTPS} off
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/javascript text/javascript application/json application/xml image/svg+xml
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Страницы всегда сверяются с сервером, чтобы правки были видны сразу.
+  # Долгий кэш для файлов сборки задан в _next/static/.htaccess.
+  <FilesMatch "\.(html|txt|xml|php)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

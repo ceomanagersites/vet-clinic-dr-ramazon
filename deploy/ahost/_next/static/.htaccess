@@ -1,0 +1,4 @@
+# Имена файлов сборки меняются при каждой новой сборке, поэтому браузер может хранить их год.
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</IfModule>
